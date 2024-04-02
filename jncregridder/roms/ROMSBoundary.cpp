@@ -46,44 +46,44 @@ ROMSBoundary::ROMSBoundary(const std::string& url, const ROMSGrid& romsGrid, siz
     dimFour = ncfWritable->addDim("four", 4);
     dimBath = ncfWritable->addDim("bath", 1);
 
-    ocean_time = ncfWritable->addVar("ocean_time", netCDF::ncDouble, {dimOceanTime});
+    ocean_time = ncfWritable->addVar("ocean_time", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime});
     ocean_time.putAtt("long_name", "ocean forcing time");
     ocean_time.putAtt("units", "days since 1968-05-23 00:00:00 GMT");
     ocean_time.putAtt("calendar", "gregorian");
 
-    angle = ncfWritable->addVar("angle", netCDF::ncDouble, {dimEtaRho, dimXiRho});
+    angle = ncfWritable->addVar("angle", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaRho, dimXiRho});
     angle.putAtt("long_name", "angle between xu axis and east");
     angle.putAtt("units", "radian");
 
-    theta_b = ncfWritable->addVar("theta_b", netCDF::ncFloat, {dimOne});
+    theta_b = ncfWritable->addVar("theta_b", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
     theta_b.putAtt("long_name", "S-coordinate surface control parameter");
     theta_b.putAtt("units", "nondimensional");
 
-    theta_s = ncfWritable->addVar("theta_s", netCDF::ncFloat, {dimOne});
+    theta_s = ncfWritable->addVar("theta_s", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
     theta_s.putAtt("long_name", "S-coordinate bottom control parameter");
     theta_s.putAtt("units", "nondimensional");
 
-    Tcline = ncfWritable->addVar("Tcline", netCDF::ncFloat, {dimOne});
+    Tcline = ncfWritable->addVar("Tcline", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
 
-    z_r = ncfWritable->addVar("z_r", netCDF::ncDouble, {dimSRho, dimEtaRho, dimXiRho});
+    z_r = ncfWritable->addVar("z_r", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho, dimEtaRho, dimXiRho});
     z_r.putAtt("long_name", "Sigma layer to depth matrix");
     z_r.putAtt("units", "meter");
 
-    hc = ncfWritable->addVar("hc", netCDF::ncDouble, {dimOne});
+    hc = ncfWritable->addVar("hc", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOne});
     hc.putAtt("long_name", "S-coordinate parameter, critical depth");
     hc.putAtt("units", "meter");
 
-    Cs_w = ncfWritable->addVar("Cs_w", netCDF::ncDouble, {dimSw});
+    Cs_w = ncfWritable->addVar("Cs_w", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSw});
     Cs_w.putAtt("long_name", "S-coordinate stretching curves at W-points");
     Cs_w.putAtt("valid_min", netCDF::ncDouble, -1.0);
     Cs_w.putAtt("valid_max", netCDF::ncDouble, 0.0);
     Cs_w.putAtt("field", "s_w, scalar");
 
-    Cs_r = ncfWritable->addVar("Cs_r", netCDF::ncDouble, {dimSRho});
+    Cs_r = ncfWritable->addVar("Cs_r", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     Cs_r.putAtt("long_name", "S-coordinate stretching curves at RHO-points");
     Cs_r.putAtt("units", "nondimensional");
 
-    s_w = ncfWritable->addVar("s_w", netCDF::ncDouble, {dimSw});
+    s_w = ncfWritable->addVar("s_w", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSw});
     s_w.putAtt("long_name", "S-coordinate at W-points");
     s_w.putAtt("valid_min", netCDF::ncDouble, -1);
     s_w.putAtt("valid_max", netCDF::ncDouble, 0);
@@ -91,11 +91,11 @@ ROMSBoundary::ROMSBoundary(const std::string& url, const ROMSGrid& romsGrid, siz
     s_w.putAtt("formula_terms", "s: s_w C: Cs_w eta: zeta depth: h depth_c: hc");
     s_w.putAtt("field", "s_w, scalar");
 
-    sc_r = ncfWritable->addVar("sc_r", netCDF::ncDouble, {dimSRho});
+    sc_r = ncfWritable->addVar("sc_r", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     sc_r.putAtt("long_name", "S-coordinate at RHO-points");
     sc_r.putAtt("units", "nondimensional");
 
-    s_rho = ncfWritable->addVar("s_rho", netCDF::ncDouble, {dimSRho});
+    s_rho = ncfWritable->addVar("s_rho", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     s_rho.putAtt("long_name", "oS-coordinate at RHO-points");
     s_rho.putAtt("valid_min", netCDF::ncDouble, -1.0);
     s_rho.putAtt("valid_max", netCDF::ncDouble, 0.0);
@@ -108,239 +108,239 @@ ROMSBoundary::ROMSBoundary(const std::string& url, const ROMSGrid& romsGrid, siz
     s_rho.putAtt("_CoordinateAxisType", "GeoZ");
     s_rho.putAtt("_CoordinateZisPositive", "up");
 
-    h = ncfWritable->addVar("h", netCDF::ncDouble, {dimEtaRho, dimXiRho});
+    h = ncfWritable->addVar("h", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaRho, dimXiRho});
     h.putAtt("long_name", "Final bathymetry at RHO-points");
     h.putAtt("units", "meters");
     h.putAtt("field", "bath, scalar");
 
-    lat_rho = ncfWritable->addVar("lat_rho", netCDF::ncDouble, {dimEtaRho, dimXiRho});
+    lat_rho = ncfWritable->addVar("lat_rho", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaRho, dimXiRho});
     lat_rho.putAtt("long_name", "latitude of RHO-points");
     lat_rho.putAtt("units", "degree_north");
     lat_rho.putAtt("field", "lat_rho, scalar");
     lat_rho.putAtt("standard_name", "latitude");
     lat_rho.putAtt("_CoordinateAxisType", "Lat");
 
-    lon_rho = ncfWritable->addVar("lon_rho", netCDF::ncDouble, {dimEtaRho, dimXiRho});
+    lon_rho = ncfWritable->addVar("lon_rho", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaRho, dimXiRho});
     lon_rho.putAtt("long_name", "longitude of RHO-points");
     lon_rho.putAtt("units", "degree_east");
     lon_rho.putAtt("field", "lon_rho, scalar");
     lon_rho.putAtt("standard_name", "longitude");
     lon_rho.putAtt("_CoordinateAxisType", "Lon");
 
-    lat_u = ncfWritable->addVar("lat_u", netCDF::ncDouble, {dimEtaU, dimXiU});
+    lat_u = ncfWritable->addVar("lat_u", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaU, dimXiU});
     lat_u.putAtt("long_name", "latitude of U-points");
     lat_u.putAtt("units", "degree_north");
     lat_u.putAtt("standard_name", "latitude");
     lat_u.putAtt("_CoordinateAxisType", "Lat");
 
-    lon_u = ncfWritable->addVar("lon_u", netCDF::ncDouble, {dimEtaU, dimXiU});
+    lon_u = ncfWritable->addVar("lon_u", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaU, dimXiU});
     lon_u.putAtt("long_name", "longitude of U-points");
     lon_u.putAtt("units", "degree_east");
     lon_u.putAtt("standard_name", "longitude");
     lon_u.putAtt("_CoordinateAxisType", "Lon");
 
-    lat_v = ncfWritable->addVar("lat_v", netCDF::ncDouble, {dimEtaV, dimXiV});
+    lat_v = ncfWritable->addVar("lat_v", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaV, dimXiV});
     lat_v.putAtt("long_name", "latitude of V-points");
     lat_v.putAtt("units", "degree_north");
     lat_v.putAtt("standard_name", "latitude");
     lat_v.putAtt("_CoordinateAxisType", "Lat");
 
-    lon_v = ncfWritable->addVar("lon_v", netCDF::ncDouble, {dimEtaV, dimXiV});
+    lon_v = ncfWritable->addVar("lon_v", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimEtaV, dimXiV});
     lon_v.putAtt("long_name", "longitude of V-points");
     lon_v.putAtt("units", "degree_east");
     lon_v.putAtt("standard_name", "longitude");
     lon_v.putAtt("_CoordinateAxisType", "Lon");
 
-    temp_west = ncfWritable->addVar("temp_west", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaRho});
+    temp_west = ncfWritable->addVar("temp_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaRho});
     temp_west.putAtt("long_name", "potential temperature western boundary conditions");
     temp_west.putAtt("units", "Celsius");
     temp_west.putAtt("field", "temp_west, scalar, series");
     temp_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     temp_west.putAtt("time", "ocean_time");
 
-    temp_east = ncfWritable->addVar("temp_east", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaRho});
+    temp_east = ncfWritable->addVar("temp_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaRho});
     temp_east.putAtt("long_name", "potential temperature eastern boundary conditions");
     temp_east.putAtt("units", "Celsius");
     temp_east.putAtt("field", "temp_east, scalar, series");
     temp_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     temp_east.putAtt("time", "ocean_time");
 
-    temp_south = ncfWritable->addVar("temp_south", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiRho});
+    temp_south = ncfWritable->addVar("temp_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiRho});
     temp_south.putAtt("long_name", "potential temperature southern boundary conditions");
     temp_south.putAtt("units", "Celsius");
     temp_south.putAtt("field", "temp_south, scalar, series");
     temp_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     temp_south.putAtt("time", "ocean_time");
 
-    temp_north = ncfWritable->addVar("temp_north", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiRho});
+    temp_north = ncfWritable->addVar("temp_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiRho});
     temp_north.putAtt("long_name", "potential temperature northern boundary conditions");
     temp_north.putAtt("units", "Celsius");
     temp_north.putAtt("field", "temp_north, scalar, series");
     temp_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     temp_north.putAtt("time", "ocean_time");
 
-    salt_west = ncfWritable->addVar("salt_west", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaRho});
+    salt_west = ncfWritable->addVar("salt_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaRho});
     salt_west.putAtt("long_name", "salinity western boundary conditions");
     salt_west.putAtt("units", "PSU");
     salt_west.putAtt("field", "salt_west, scalar, series");
     salt_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     salt_west.putAtt("time", "ocean_time");
 
-    salt_east = ncfWritable->addVar("salt_east", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaRho});
+    salt_east = ncfWritable->addVar("salt_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaRho});
     salt_east.putAtt("long_name", "salinity eastern boundary conditions");
     salt_east.putAtt("units", "PSU");
     salt_east.putAtt("field", "salt_east, scalar, series");
     salt_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     salt_east.putAtt("time", "ocean_time");
 
-    salt_south = ncfWritable->addVar("salt_south", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiRho});
+    salt_south = ncfWritable->addVar("salt_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiRho});
     salt_south.putAtt("long_name", "salinity southern boundary conditions");
     salt_south.putAtt("units", "PSU");
     salt_south.putAtt("field", "salt_south, scalar, series");
     salt_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     salt_south.putAtt("time", "ocean_time");
 
-    salt_north = ncfWritable->addVar("salt_north", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiRho});
+    salt_north = ncfWritable->addVar("salt_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiRho});
     salt_north.putAtt("long_name", "salinity northern boundary conditions");
     salt_north.putAtt("units", "PSU");
     salt_north.putAtt("field", "salt_north, scalar, series");
     salt_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     salt_north.putAtt("time", "ocean_time");
 
-    zeta_west = ncfWritable->addVar("zeta_west", netCDF::ncDouble, {dimOceanTime, dimEtaRho});
+    zeta_west = ncfWritable->addVar("zeta_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaRho});
     zeta_west.putAtt("long_name", "free-surface western boundary conditions");
     zeta_west.putAtt("units", "meter");
     zeta_west.putAtt("field", "zeta_west, scalar, series");
     zeta_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     zeta_west.putAtt("time", "ocean_time");
 
-    zeta_east = ncfWritable->addVar("zeta_east", netCDF::ncDouble, {dimOceanTime, dimEtaRho});
+    zeta_east = ncfWritable->addVar("zeta_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaRho});
     zeta_east.putAtt("long_name", "free-surface eastern boundary conditions");
     zeta_east.putAtt("units", "meter");
     zeta_east.putAtt("field", "zeta_east, scalar, series");
     zeta_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     zeta_east.putAtt("time", "ocean_time");
 
-    zeta_south = ncfWritable->addVar("zeta_south", netCDF::ncDouble, {dimOceanTime, dimXiRho});
+    zeta_south = ncfWritable->addVar("zeta_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiRho});
     zeta_south.putAtt("long_name", "free-surface southern boundary conditions");
     zeta_south.putAtt("units", "meter");
     zeta_south.putAtt("field", "zeta_south, scalar, series");
     zeta_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     zeta_south.putAtt("time", "ocean_time");
 
-    zeta_north = ncfWritable->addVar("zeta_north", netCDF::ncDouble, {dimOceanTime, dimXiRho});
+    zeta_north = ncfWritable->addVar("zeta_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiRho});
     zeta_north.putAtt("long_name", "free-surface northern boundary conditions");
     zeta_north.putAtt("units", "meter");
     zeta_north.putAtt("field", "zeta_north, scalar, series");
     zeta_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     zeta_north.putAtt("time", "ocean_time");
 
-    u_west = ncfWritable->addVar("u_west", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaU});
+    u_west = ncfWritable->addVar("u_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaU});
     u_west.putAtt("long_name", "3D U-momentum western boundary conditions");
     u_west.putAtt("units", "meter second-1");
     u_west.putAtt("field", "u_west, scalar, series");
     u_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     u_west.putAtt("time", "ocean_time");
 
-    u_east = ncfWritable->addVar("u_east", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaU});
+    u_east = ncfWritable->addVar("u_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaU});
     u_east.putAtt("long_name", "3D U-momentum eastern boundary conditions");
     u_east.putAtt("units", "meter second-1");
     u_east.putAtt("field", "u_east, scalar, series");
     u_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     u_east.putAtt("time", "ocean_time");
 
-    u_south = ncfWritable->addVar("u_south", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiU});
+    u_south = ncfWritable->addVar("u_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiU});
     u_south.putAtt("long_name", "3D U-momentum southern boundary conditions");
     u_south.putAtt("units", "meter second-1");
     u_south.putAtt("field", "u_south, scalar, series");
     u_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     u_south.putAtt("time", "ocean_time");
 
-    u_north = ncfWritable->addVar("u_north", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiU});
+    u_north = ncfWritable->addVar("u_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiU});
     u_north.putAtt("long_name", "3D U-momentum northern boundary conditions");
     u_north.putAtt("units", "meter second-1");
     u_north.putAtt("field", "u_north, scalar, series");
     u_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     u_north.putAtt("time", "ocean_time");
 
-    v_west = ncfWritable->addVar("v_west", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaV});
+    v_west = ncfWritable->addVar("v_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaV});
     v_west.putAtt("long_name", "3D V-momentum western boundary conditions");
     v_west.putAtt("units", "meter second-1");
     v_west.putAtt("field", "v_west, scalar, series");
     v_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     v_west.putAtt("time", "ocean_time");
 
-    v_east = ncfWritable->addVar("v_east", netCDF::ncDouble, {dimOceanTime, dimSRho, dimEtaV});
+    v_east = ncfWritable->addVar("v_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimEtaV});
     v_east.putAtt("long_name", "3D V-momentum eastern boundary conditions");
     v_east.putAtt("units", "meter second-1");
     v_east.putAtt("field", "v_east, scalar, series");
     v_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     v_east.putAtt("time", "ocean_time");
 
-    v_south = ncfWritable->addVar("v_south", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiV});
+    v_south = ncfWritable->addVar("v_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiV});
     v_south.putAtt("long_name", "3D V-momentum southern boundary conditions");
     v_south.putAtt("units", "meter second-1");
     v_south.putAtt("field", "v_south, scalar, series");
     v_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     v_south.putAtt("time", "ocean_time");
 
-    v_north = ncfWritable->addVar("v_north", netCDF::ncDouble, {dimOceanTime, dimSRho, dimXiV});
+    v_north = ncfWritable->addVar("v_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimSRho, dimXiV});
     v_north.putAtt("long_name", "3D V-momentum northern boundary conditions");
     v_north.putAtt("units", "meter second-1");
     v_north.putAtt("field", "v_north, scalar, series");
     v_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     v_north.putAtt("time", "ocean_time");
 
-    vbar_west = ncfWritable->addVar("vbar_west", netCDF::ncDouble, {dimOceanTime, dimEtaV});
+    vbar_west = ncfWritable->addVar("vbar_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaV});
     vbar_west.putAtt("long_name", "2D V-momentum western boundary conditions");
     vbar_west.putAtt("units", "meter second-1");
     vbar_west.putAtt("field", "vbar_west, scalar, series");
     vbar_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     vbar_west.putAtt("time", "ocean_time");
 
-    vbar_east = ncfWritable->addVar("vbar_east", netCDF::ncDouble, {dimOceanTime, dimEtaV});
+    vbar_east = ncfWritable->addVar("vbar_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaV});
     vbar_east.putAtt("long_name", "2D V-momentum eastern boundary conditions");
     vbar_east.putAtt("units", "meter second-1");
     vbar_east.putAtt("field", "vbar_east, scalar, series");
     vbar_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     vbar_east.putAtt("time", "ocean_time");
 
-    vbar_south = ncfWritable->addVar("vbar_south", netCDF::ncDouble, {dimOceanTime, dimXiV});
+    vbar_south = ncfWritable->addVar("vbar_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiV});
     vbar_south.putAtt("long_name", "2D V-momentum southern boundary conditions");
     vbar_south.putAtt("units", "meter second-1");
     vbar_south.putAtt("field", "vbar_south, scalar, series");
     vbar_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     vbar_south.putAtt("time", "ocean_time");
 
-    vbar_north = ncfWritable->addVar("vbar_north", netCDF::ncDouble, {dimOceanTime, dimXiV});
+    vbar_north = ncfWritable->addVar("vbar_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiV});
     vbar_north.putAtt("long_name", "2D V-momentum northern boundary conditions");
     vbar_north.putAtt("units", "meter second-1");
     vbar_north.putAtt("field", "vbar_north, scalar, series");
     vbar_north.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     vbar_north.putAtt("time", "ocean_time");
 
-    ubar_west = ncfWritable->addVar("ubar_west", netCDF::ncDouble, {dimOceanTime, dimEtaU});
+    ubar_west = ncfWritable->addVar("ubar_west", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaU});
     ubar_west.putAtt("long_name", "2D U-momentum western boundary conditions");
     ubar_west.putAtt("units", "meter second-1");
     ubar_west.putAtt("field", "ubar_west, scalar, series");
     ubar_west.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     ubar_west.putAtt("time", "ocean_time");
 
-    ubar_east = ncfWritable->addVar("ubar_east", netCDF::ncDouble, {dimOceanTime, dimEtaU});
+    ubar_east = ncfWritable->addVar("ubar_east", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimEtaU});
     ubar_east.putAtt("long_name", "2D U-momentum eastern boundary conditions");
     ubar_east.putAtt("units", "meter second-1");
     ubar_east.putAtt("field", "ubar_east, scalar, series");
     ubar_east.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     ubar_east.putAtt("time", "ocean_time");
 
-    ubar_south = ncfWritable->addVar("ubar_south", netCDF::ncDouble, {dimOceanTime, dimXiU});
+    ubar_south = ncfWritable->addVar("ubar_south", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiU});
     ubar_south.putAtt("long_name", "2D U-momentum southern boundary conditions");
     ubar_south.putAtt("units", "meter second-1");
     ubar_south.putAtt("field", "ubar_south, scalar, series");
     ubar_south.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     ubar_south.putAtt("time", "ocean_time");
 
-    ubar_north = ncfWritable->addVar("ubar_north", netCDF::ncDouble, {dimOceanTime, dimXiU});
+    ubar_north = ncfWritable->addVar("ubar_north", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime, dimXiU});
     ubar_north.putAtt("long_name", "2D U-momentum northern boundary conditions");
     ubar_north.putAtt("units", "meter second-1");
     ubar_north.putAtt("field", "ubar_north, scalar, series");
@@ -550,110 +550,6 @@ void ROMSBoundary::write(size_t time) {
     count = {1, dimXiV.getSize()};
     vbar_south.putVar(start, count, VBarSouthBuffer.data());
     vbar_north.putVar(start, count, VBarNorthBuffer.data());
-
-    /*
-    for (int k = 0; k < dimSRho.getSize(); ++k) {
-        for (int j = 0; j < dimEtaRho.getSize(); ++j) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(j)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            temp_west.putVar(start, count,&TEMP[k][j][0]);
-            salt_west.putVar(start, count,&SALT[k][j][0]);
-            temp_east.putVar(start, count,&TEMP[k][j][dimXiRho.getSize()-1]);
-            salt_east.putVar(start, count,&SALT[k][j][dimXiRho.getSize()-1]);
-        }
-
-        for (int i = 0; i < dimXiRho.getSize(); ++i) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            temp_south.putVar(start, count, &TEMP[k][0][i]);
-            salt_south.putVar(start, count, &SALT[k][0][i]);
-            temp_north.putVar(start, count, &TEMP[k][dimEtaRho.getSize()-1][i]);
-            salt_north.putVar(start, count, &SALT[k][dimEtaRho.getSize()-1][i]);
-        }
-
-        for (int j = 0; j < dimEtaU.getSize(); ++j) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(j)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            u_west.putVar(start, count, &U[k][j][0]);
-            u_east.putVar(start, count, &U[k][j][dimXiU.getSize()-1]);
-        }
-
-        for (int i = 0; i < dimXiU.getSize(); ++i) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            u_south.putVar(start, count, &U[k][0][i]);
-            u_north.putVar(start, count, &U[k][dimEtaU.getSize()-1][i]);
-        }
-
-        for (int j = 0; j < dimEtaV.getSize(); ++j) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(j)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            v_west.putVar(start, count, &V[k][j][0]);
-            v_east.putVar(start, count, &V[k][j][dimXiV.getSize()-1]);
-        }
-
-        for (int i = 0; i < dimXiV.getSize(); ++i) {
-            std::vector<size_t> start = {time, static_cast<size_t>(k), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-
-            v_south.putVar(start, count, &V[k][0][i]);
-            v_north.putVar(start, count, &V[k][dimEtaV.getSize()-1][i]);
-        }
-    }
-
-    for (int j = 0; j < dimEtaRho.getSize(); j++) {
-        std::vector<size_t> start = {time, static_cast<size_t>(j)};
-        std::vector<size_t> count = {1, 1};
-
-        zeta_west.putVar(start, count, &ZETA[j][0]);
-        zeta_east.putVar(start, count, &ZETA[j][dimXiRho.getSize()-1]);
-    }
-
-    for (int i = 0; i < dimXiRho.getSize(); i++) {
-        std::vector<size_t> start = {time, static_cast<size_t>(i)};
-        std::vector<size_t> count = {1, 1};
-
-        zeta_south.putVar(start, count,&ZETA[0][i]);
-        zeta_north.putVar(start, count,&ZETA[dimEtaRho.getSize()-1][i]);
-    }
-
-    for (int j = 0; j < dimEtaU.getSize(); ++j) {
-        std::vector<size_t> start = {time, static_cast<size_t>(j)};
-        std::vector<size_t> count = {1, 1};
-
-        ubar_west.putVar(start, count,&UBAR[j][0]);
-        ubar_east.putVar(start, count,&UBAR[j][dimXiU.getSize()-1]);
-    }
-
-    for (int i = 0; i < dimXiU.getSize(); ++i) {
-        std::vector<size_t> start = {time, static_cast<size_t>(i)};
-        std::vector<size_t> count = {1, 1};
-
-        ubar_south.putVar(start, count,&UBAR[0][i]);
-        ubar_north.putVar(start, count,&UBAR[dimEtaU.getSize()-1][i]);
-    }
-
-    for (int j = 0; j < dimEtaV.getSize(); ++j) {
-        std::vector<size_t> start = {time, static_cast<size_t>(j)};
-        std::vector<size_t> count = {1, 1};
-
-        vbar_west.putVar(start, count,&VBAR[j][0]);
-        vbar_east.putVar(start, count,&VBAR[j][dimXiV.getSize()-1]);
-    }
-
-    for (int i = 0; i < dimXiV.getSize(); ++i) {
-        std::vector<size_t> start = {time, static_cast<size_t>(i)};
-        std::vector<size_t> count = {1, 1};
-
-        vbar_south.putVar(start, count,&VBAR[0][i]);
-        vbar_north.putVar(start, count,&VBAR[dimEtaV.getSize()-1][i]);
-    }
-    */
 }
 
 std::string ROMSBoundary::getCurrentDateTime() const {

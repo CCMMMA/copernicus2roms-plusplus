@@ -6,7 +6,13 @@ set(CMAKE_CXX_STANDARD 23)
 find_package(OpenMP REQUIRED)
 set(LIBOMP OpenMP::OpenMP_CXX)
 
+# Include the support to external projects
 include(ExternalProject)
+
+# OpenSSL is needed for building dependences
+find_package(OpenSSL REQUIRED)
+
+# Set the external install location
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
 set(NETCDFCXXLIBS_PARAMS "")
@@ -14,7 +20,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(NETCDFCXXLIBS_PARAMS "-lnetcdf -lhdf5_hl -lhdf5 -lm -lz -lcurl")
 endif()
 
+# Add to the includes
 include_directories(SYSTEM ${EXTERNAL_INSTALL_LOCATION}/include)
+
+# Add to the libraries
 link_directories(${EXTERNAL_INSTALL_LOCATION}/lib)
 
 ExternalProject_Add(szlib
@@ -96,6 +105,7 @@ endif()
 
 add_executable(MyOcean2ROMS MyOcean2ROMS.cpp jncregridder/roms/ROMSGrid.cpp jncregridder/roms/ROMSGrid.h jncregridder/data/copernicus/CopernicusBase.cpp jncregridder/data/copernicus/CopernicusBase.h jncregridder/data/copernicus/CopernicusTem.cpp jncregridder/data/copernicus/CopernicusTem.h jncregridder/data/copernicus/CopernicusCur.cpp jncregridder/data/copernicus/CopernicusCur.h jncregridder/data/copernicus/CopernicusSSH.cpp jncregridder/data/copernicus/CopernicusSSH.h jncregridder/data/copernicus/CopernicusSal.cpp jncregridder/data/copernicus/CopernicusSal.h jncregridder/util/BilinearInterpolator.cpp jncregridder/util/BilinearInterpolator.h jncregridder/util/InterpolatorBase.cpp jncregridder/util/InterpolatorBase.h jncregridder/roms/ROMSInit.cpp jncregridder/roms/ROMSInit.h jncregridder/util/BilinearInterpolator3D.cpp jncregridder/util/BilinearInterpolator3D.h jncregridder/roms/ROMSBoundary.cpp jncregridder/roms/ROMSBoundary.h)
 
+# Expicit the dependencies
 add_dependencies(zlib szlib)
 add_dependencies(curl zlib)
 add_dependencies(hdf5 curl)
@@ -103,4 +113,4 @@ add_dependencies(netcdf hdf5)
 add_dependencies(netcdfcxx netcdf)
 add_dependencies(${PROJECT_NAME} netcdfcxx)
 
-target_link_libraries(${PROJECT_NAME} ${LIBOMP} ${LIBNETCDFCXX} ${LIBNETCDF} ${LIBCURL} ${LIBHDF5} ${LIBZLIB} ${LIBSZLIB})
+target_link_libraries(${PROJECT_NAME} ${LIBOMP} pthread ${LIBNETCDFCXX} ${LIBNETCDF} ${LIBCURL} ${LIBHDF5} ${LIBZLIB} ${LIBSZLIB} OpenSSL::SSL dl)

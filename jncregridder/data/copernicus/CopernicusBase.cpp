@@ -6,7 +6,7 @@
 
 CopernicusBase::CopernicusBase(const std::string& url) {
     try {
-        ncFile = std::make_unique<netCDF::NcFile>(url, netCDF::NcFile::read);
+        ncFile = new netCDF::NcFile(url, netCDF::NcFile::read);
 
         // Load dimensions
         auto dimTime = ncFile->getDim("time");

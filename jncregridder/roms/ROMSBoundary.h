@@ -6,6 +6,7 @@
 #define MYOCEAN2ROMS_ROMSBOUNDARY_H
 
 #include <iostream>
+#include <ctime>
 #include "ROMSGrid.h"
 
 class ROMSBoundary {

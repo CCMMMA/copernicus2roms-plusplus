@@ -134,42 +134,42 @@ ROMSInit::ROMSInit(const std::string& url, const ROMSGrid& romsGrid, size_t forc
     zeta.putAtt("missing_value", netCDF::ncFloat, 1, &missing_value);
     zeta.putAtt("time", "ocean_time");
 
-    theta_b = ncfWritable->addVar("theta_b", netCDF::ncFloat, {dimOne});
+    theta_b = ncfWritable->addVar("theta_b", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
     theta_b.putAtt("long_name", "S-coordinate surface control parameter");
     theta_b.putAtt("units", "nondimensional");
 
-    theta_s = ncfWritable->addVar("theta_s", netCDF::ncFloat, {dimOne});
+    theta_s = ncfWritable->addVar("theta_s", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
     theta_s.putAtt("long_name", "S-coordinate bottom control parameter");
     theta_s.putAtt("units", "nondimensional");
 
-    Tcline = ncfWritable->addVar("Tcline", netCDF::ncFloat, {dimOne});
+    Tcline = ncfWritable->addVar("Tcline", netCDF::ncFloat, std::initializer_list<netCDF::NcDim>{dimOne});
 
-    ocean_time = ncfWritable->addVar("ocean_time", netCDF::ncDouble, {dimOceanTime});
+    ocean_time = ncfWritable->addVar("ocean_time", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOceanTime});
     ocean_time.putAtt("long_name", "ocean forcing time");
     ocean_time.putAtt("units", "days since 1968-05-23 00:00:00 GMT");
     ocean_time.putAtt("calendar", "gregorian");
 
-    hc = ncfWritable->addVar("hc", netCDF::ncDouble, {dimOne});
+    hc = ncfWritable->addVar("hc", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOne});
     hc.putAtt("long_name", "S-coordinate parameter, critical depth");
     hc.putAtt("units", "meter");
 
-    scrum_time = ncfWritable->addVar("scrum_time", netCDF::ncDouble, {dimScrumTime});
+    scrum_time = ncfWritable->addVar("scrum_time", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimScrumTime});
     scrum_time.putAtt("long_name", "time since initialization");
     scrum_time.putAtt("units", "second");
 
-    tend = ncfWritable->addVar("tend", netCDF::ncDouble, {dimOne});
+    tend = ncfWritable->addVar("tend", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimOne});
     tend.putAtt("long_name", "end processing day");
     tend.putAtt("units", "day");
 
-    Cs_r = ncfWritable->addVar("Cs_r", netCDF::ncDouble, {dimSRho});
+    Cs_r = ncfWritable->addVar("Cs_r", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     Cs_r.putAtt("long_name", "S-coordinate stretching curves at RHO-points");
     Cs_r.putAtt("units", "nondimensional");
 
-    sc_r = ncfWritable->addVar("sc_r", netCDF::ncDouble, {dimSRho});
+    sc_r = ncfWritable->addVar("sc_r", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     sc_r.putAtt("long_name", "S-coordinate at RHO-points");
     sc_r.putAtt("units", "nondimensional");
 
-    s_rho = ncfWritable->addVar("s_rho", netCDF::ncDouble, {dimSRho});
+    s_rho = ncfWritable->addVar("s_rho", netCDF::ncDouble, std::initializer_list<netCDF::NcDim>{dimSRho});
     s_rho.putAtt("long_name", "oS-coordinate at RHO-points");
     s_rho.putAtt("valid_min", netCDF::ncDouble, -1.0);
     s_rho.putAtt("valid_max", netCDF::ncDouble, 0.0);

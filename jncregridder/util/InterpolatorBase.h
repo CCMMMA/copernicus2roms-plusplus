@@ -5,10 +5,12 @@
 #ifndef MYOCEAN2ROMS_INTERPOLATORBASE_H
 #define MYOCEAN2ROMS_INTERPOLATORBASE_H
 
+#include <omp.h>
 #include <iostream>
 #include <vector>
 #include <cmath>
-#include <omp.h>
+#include <tuple>
+#include <algorithm>
 
 class InterpolatorBase {
 public:

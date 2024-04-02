@@ -30,7 +30,7 @@ protected:
     std::vector<double> loadVariable(const std::string& variable_name);
 
 private:
-    std::unique_ptr<netCDF::NcFile> ncFile;
+    netCDF::NcFile* ncFile;
     std::vector<double> LAT;
     std::vector<double> LON;
     std::vector<double> TIME;
