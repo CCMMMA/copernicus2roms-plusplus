@@ -10,6 +10,7 @@
 #include <string>
 #include <ctime>
 #include <vector>
+#include <omp.h>
 #include "ROMSGrid.h"
 
 class ROMSInit {

@@ -29,6 +29,8 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
     double srcLonStep = srcXi == 0 ? 0 : srcLonDelta / srcXi;
 
     std::vector<std::vector<double>> dst(dstEta, std::vector<double>(dstXi, dstMissingValue));
+
+    #pragma omp parallel for collapse(2)
     for (size_t dstJ = 0; dstJ < dstEta; ++dstJ) {
         for (size_t dstI = 0; dstI < dstXi; ++dstI) {
             if (dstMASK[dstJ][dstI] == 1) {

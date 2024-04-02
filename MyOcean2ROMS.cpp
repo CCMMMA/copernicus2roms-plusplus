@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <mpi.h>
 #include "jncregridder/roms/ROMSGrid.h"
 #include "jncregridder/data/copernicus/CopernicusTem.h"
 #include "jncregridder/data/copernicus/CopernicusSSH.h"
@@ -279,6 +278,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
 
         std::cout << "Calculating UBAR" << std::endl;
         std::vector<std::vector<double>> UBAR(etaU, std::vector<double>(xiU, 1e37));
+        #pragma omp parallel for collapse(2)
         for (int j = 0; j < etaU; j++) {
             for (int i = 0; i < xiU; i++) {
                 if (MASKU[j][i] == 1) {
@@ -303,6 +303,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
 
         std::cout << "Calculating VBAR" << std::endl;
         std::vector<std::vector<double>> VBAR(etaV, std::vector<double>(xiV, 1e37));
+        #pragma omp parallel for collapse(2)
         for (int j = 0; j < etaV; j++) {
             for (int i = 0; i < xiV; i++) {
                 if (MASKV[j][i] == 1) {
@@ -345,7 +346,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
         romsBoundary.setVBAR(VBAR);
         romsBoundary.write(t);
 
-        // break;
+        break;
     }
 }
 
@@ -383,22 +384,12 @@ int main(int argc, char* argv[]) {
     std::string initPath = argv[4];
     std::string boundaryPath = argv[5];
 
-    MPI_Init(&argc, &argv);
-
-    int rank, size;
-    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    MPI_Comm_size(MPI_COMM_WORLD, &size);
-
-    std::cout << rank << " " << size << std::endl;
-
-    /*
     auto start = std::chrono::high_resolution_clock::now();
     MyOcean2ROMS myOcean2Roms(gridPath, dataPath, ncepDate, initPath, boundaryPath);
     auto end = std::chrono::high_resolution_clock::now();
 
     std::chrono::duration<double> duration = end - start;
     std::cout << "Execution time: " << duration.count() << " seconds" << std::endl;
-    */
 
     return 0;
 }

@@ -223,6 +223,8 @@ void ROMSInit::write(size_t time) {
                               dimEtaU.getSize() * dimXiU.getSize());
 
     size_t idx = 0;
+
+    #pragma omp parallel for collapse(2)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaRho.getSize(); j++) {
             for (int i = 0; i < dimXiRho.getSize(); i++) {
@@ -231,6 +233,7 @@ void ROMSInit::write(size_t time) {
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaRho.getSize(); j++) {
             for (int i = 0; i < dimXiRho.getSize(); i++) {
@@ -239,6 +242,7 @@ void ROMSInit::write(size_t time) {
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaV.getSize(); j++) {
             for (int i = 0; i < dimXiV.getSize(); i++) {
@@ -247,6 +251,7 @@ void ROMSInit::write(size_t time) {
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaU.getSize(); j++) {
             for (int i = 0; i < dimXiU.getSize(); i++) {
@@ -255,18 +260,21 @@ void ROMSInit::write(size_t time) {
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int j = 0; j < dimEtaRho.getSize(); j++) {
         for (int i = 0; i < dimXiRho.getSize(); i++) {
             buffer[idx++] = ZETA[j][i];
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int j = 0; j < dimEtaV.getSize(); j++) {
         for (int i = 0; i < dimXiV.getSize(); i++) {
             buffer[idx++] = VBAR[j][i];
         }
     }
 
+    #pragma omp parallel for collapse(2)
     for (int j = 0; j < dimEtaU.getSize(); j++) {
         for (int i = 0; i < dimXiU.getSize(); i++) {
             buffer[idx++] = UBAR[j][i];
@@ -313,61 +321,6 @@ void ROMSInit::write(size_t time) {
     std::vector<size_t> count_ubar = {1, dimEtaU.getSize(), dimXiU.getSize()};
     ubar.putVar(start_ubar, count_ubar, buffer.data() + idx);
 }
-
-/*
-void ROMSInit::write(size_t time) {
-    for (int k = 0; k < dimSRho.getSize(); k++) {
-        for (int j = 0; j < dimEtaRho.getSize(); j++) {
-            for (int i = 0; i < dimXiRho.getSize(); i++) {
-                std::vector<size_t> start = {static_cast<size_t>(time), static_cast<size_t>(k), static_cast<size_t>(j), static_cast<size_t>(i)};
-                std::vector<size_t> count = {1, 1, 1, 1};
-                salt.putVar(start, count, &SALT[k][j][i]);
-                temp.putVar(start, count, &TEMP[k][j][i]);
-            }
-        }
-
-        for (int j = 0; j < dimEtaV.getSize(); j++) {
-            for (int i = 0; i < dimXiV.getSize(); i++) {
-                std::vector<size_t> start = {static_cast<size_t>(time), static_cast<size_t>(k), static_cast<size_t>(j), static_cast<size_t>(i)};
-                std::vector<size_t> count = {1, 1, 1, 1};
-                v.putVar(start, count, &V[k][j][i]);
-            }
-        }
-
-        for (int j = 0; j < dimEtaU.getSize(); j++) {
-            for (int i = 0; i < dimXiU.getSize(); i++) {
-                std::vector<size_t> start = {static_cast<size_t>(time), static_cast<size_t>(k), static_cast<size_t>(j), static_cast<size_t>(i)};
-                std::vector<size_t> count = {1, 1, 1, 1};
-                u.putVar(start, count, &U[k][j][i]);
-            }
-        }
-    }
-
-    for (int j = 0; j < dimEtaRho.getSize(); j++) {
-        for (int i = 0; i < dimXiRho.getSize(); i++) {
-            std::vector<size_t> start = {time, static_cast<size_t>(j), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-            zeta.putVar(start, count, &ZETA[j][i]);
-        }
-    }
-
-    for (int j = 0; j < dimEtaV.getSize(); j++) {
-        for (int i = 0; i < dimXiV.getSize(); i++) {
-            std::vector<size_t> start = {time, static_cast<size_t>(j), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-            vbar.putVar(start, count, &VBAR[j][i]);
-        }
-    }
-
-    for (int j = 0; j < dimEtaU.getSize(); j++) {
-        for (int i = 0; i < dimXiU.getSize(); i++) {
-            std::vector<size_t> start = {time, static_cast<size_t>(j), static_cast<size_t>(i)};
-            std::vector<size_t> count = {1, 1, 1};
-            ubar.putVar(start, count, &UBAR[j][i]);
-        }
-    }
-}
-*/
 
 std::string ROMSInit::getCurrentDateTime() const {
     std::time_t now = std::time(nullptr);

@@ -3,6 +3,13 @@ project(MyOcean2ROMS)
 
 set(CMAKE_CXX_STANDARD 23)
 
+find_package(MPI REQUIRED)
+include_directories(${MPI_INCLUDE_PATH})
+set(LIBMPI ${MPI_C_LIBRARIES})
+
+find_package(OpenMP REQUIRED)
+set(LIBOMP OpenMP::OpenMP_CXX)
+
 include(ExternalProject)
 set(EXTERNAL_INSTALL_LOCATION ${CMAKE_BINARY_DIR}/external)
 
@@ -100,4 +107,4 @@ add_dependencies(netcdf hdf5)
 add_dependencies(netcdfcxx netcdf)
 add_dependencies(${PROJECT_NAME} netcdfcxx)
 
-target_link_libraries(${PROJECT_NAME} ${LIBNETCDFCXX} ${LIBNETCDF} ${LIBCURL} ${LIBHDF5} ${LIBZLIB} ${LIBSZLIB})
+target_link_libraries(${PROJECT_NAME} ${LIBOMP} ${LIBNETCDFCXX} ${LIBNETCDF} ${LIBCURL} ${LIBHDF5} ${LIBZLIB} ${LIBSZLIB})
