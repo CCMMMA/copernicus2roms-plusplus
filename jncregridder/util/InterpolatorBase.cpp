@@ -30,7 +30,7 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
 
     std::vector<std::vector<double>> dst(dstEta, std::vector<double>(dstXi, dstMissingValue));
 
-    #pragma omp parallel for collapse(2)
+    #pragma omp parallel for collapse(2) default(none) shared(dstEta, dstXi, srcLonMin, srcLatMin, srcLonStep, srcLatStep, srcEta, srcXi, values, srcMissingValue, dst)
     for (size_t dstJ = 0; dstJ < dstEta; ++dstJ) {
         for (size_t dstI = 0; dstI < dstXi; ++dstI) {
             if (dstMASK[dstJ][dstI] == 1) {

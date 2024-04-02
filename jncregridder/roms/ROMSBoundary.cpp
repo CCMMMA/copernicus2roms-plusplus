@@ -420,6 +420,7 @@ void ROMSBoundary::write(size_t time) {
     std::vector<double> VBarSouthBuffer(dimXiV.getSize());
     std::vector<double> VBarNorthBuffer(dimXiV.getSize());
 
+    #pragma omp parallel for default(none) shared(TempWestBuffer, SaltWestBuffer, TempEastBuffer, SaltEastBuffer, TempSouthBuffer, SaltSouthBuffer, TempNorthBuffer, SaltNorthBuffer, UWestBuffer, UEastBuffer, USouthBuffer, UNorthBuffer, VWestBuffer, VEastBuffer, VSouthBuffer, VNorthBuffer)
     for (int k = 0; k < dimSRho.getSize(); ++k) {
         for (int j = 0; j < dimEtaRho.getSize(); ++j) {
             size_t index = k * dimEtaRho.getSize() + j;
@@ -468,31 +469,37 @@ void ROMSBoundary::write(size_t time) {
         }
     }
 
+    #pragma omp parallel for default(none) shared(ZetaWestBuffer, ZetaEastBuffer)
     for (int j = 0; j < dimEtaRho.getSize(); j++) {
         ZetaWestBuffer[j] = ZETA[j][0];
         ZetaEastBuffer[j] = ZETA[j][dimXiRho.getSize()-1];
     }
 
+    #pragma omp parallel for default(none) shared(ZetaSouthBuffer, ZetaNorthBuffer)
     for (int i = 0; i < dimXiRho.getSize(); i++) {
         ZetaSouthBuffer[i] = ZETA[0][i];
         ZetaNorthBuffer[i] = ZETA[dimEtaRho.getSize()-1][i];
     }
 
+    #pragma omp parallel for default(none) shared(UBarWestBuffer, UBarEastBuffer)
     for (int j = 0; j < dimEtaU.getSize(); ++j) {
         UBarWestBuffer[j] = UBAR[j][0];
         UBarEastBuffer[j] = UBAR[j][dimXiU.getSize()-1];
     }
 
+    #pragma omp parallel for default(none) shared(UBarSouthBuffer, UBarNorthBuffer)
     for (int i = 0; i < dimXiU.getSize(); ++i) {
         UBarSouthBuffer[i] = UBAR[0][i];
         UBarNorthBuffer[i] = UBAR[dimEtaU.getSize()-1][i];
     }
 
+    #pragma omp parallel for default(none) shared(VBarWestBuffer, VBarEastBuffer)
     for (int j = 0; j < dimEtaV.getSize(); ++j) {
         VBarWestBuffer[j] = VBAR[j][0];
         VBarEastBuffer[j] = VBAR[j][dimXiV.getSize()-1];
     }
 
+    #pragma omp parallel for default(none) shared(VBarSouthBuffer, VBarNorthBuffer)
     for (int i = 0; i < dimXiV.getSize(); ++i) {
         VBarSouthBuffer[i] = VBAR[0][i];
         VBarNorthBuffer[i] = VBAR[dimEtaV.getSize()-1][i];

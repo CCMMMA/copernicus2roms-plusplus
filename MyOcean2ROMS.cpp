@@ -279,7 +279,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
 
         std::cout << "Calculating UBAR" << std::endl;
         std::vector<std::vector<double>> UBAR(etaU, std::vector<double>(xiU, 1e37));
-        #pragma omp parallel for collapse(2)
+        #pragma omp parallel for collapse(2) default(none) shared(etaU, xiU, MASKU, UBAR, romsZ, U_ROMS)
         for (int j = 0; j < etaU; j++) {
             for (int i = 0; i < xiU; i++) {
                 if (MASKU[j][i] == 1) {
@@ -304,7 +304,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
 
         std::cout << "Calculating VBAR" << std::endl;
         std::vector<std::vector<double>> VBAR(etaV, std::vector<double>(xiV, 1e37));
-        #pragma omp parallel for collapse(2)
+        #pragma omp parallel for collapse(2) default(none) shared(etaV, xiV, MASKV, VBAR, romsZ, V_ROMS)
         for (int j = 0; j < etaV; j++) {
             for (int i = 0; i < xiV; i++) {
                 if (MASKV[j][i] == 1) {
