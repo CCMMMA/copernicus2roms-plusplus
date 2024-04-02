@@ -3,10 +3,6 @@ project(MyOcean2ROMS)
 
 set(CMAKE_CXX_STANDARD 23)
 
-find_package(MPI REQUIRED)
-include_directories(${MPI_INCLUDE_PATH})
-set(LIBMPI ${MPI_C_LIBRARIES})
-
 find_package(OpenMP REQUIRED)
 set(LIBOMP OpenMP::OpenMP_CXX)
 
@@ -86,8 +82,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 endif()
 
 ExternalProject_Add(netcdfcxx
-        # URL https://downloads.unidata.ucar.edu/netcdf-cxx/4.3.1/netcdf-cxx4-4.3.1.tar.gz
-        URL /Users/ciro/Downloads/netcdf-cxx4-4.3.1.zip
+        URL https://downloads.unidata.ucar.edu/netcdf-cxx/4.3.1/netcdf-cxx4-4.3.1.tar.gz
+        # URL /Users/ciro/Downloads/netcdf-cxx4-4.3.1.zip
         TIMEOUT 360
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ./configure LIBS=${NETCDFCXXLIBS_PARAMS} CFLAGS=-fPIC CPPFLAGS=-I${EXTERNAL_INSTALL_LOCATION}/include/ LDFLAGS=-L${EXTERNAL_INSTALL_LOCATION}/lib/ --prefix=${EXTERNAL_INSTALL_LOCATION}   --enable-shared
