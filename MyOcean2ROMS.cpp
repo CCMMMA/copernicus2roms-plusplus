@@ -347,7 +347,7 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
         romsBoundary.setVBAR(VBAR);
         romsBoundary.write(t);
 
-        break;
+        // break;
     }
 }
 

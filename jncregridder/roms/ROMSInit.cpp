@@ -224,7 +224,6 @@ void ROMSInit::write(size_t time) {
 
     size_t idx = 0;
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaRho.getSize(); j++) {
             for (int i = 0; i < dimXiRho.getSize(); i++) {
@@ -233,7 +232,6 @@ void ROMSInit::write(size_t time) {
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaRho.getSize(); j++) {
             for (int i = 0; i < dimXiRho.getSize(); i++) {
@@ -242,7 +240,6 @@ void ROMSInit::write(size_t time) {
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaV.getSize(); j++) {
             for (int i = 0; i < dimXiV.getSize(); i++) {
@@ -251,7 +248,6 @@ void ROMSInit::write(size_t time) {
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int k = 0; k < dimSRho.getSize(); k++) {
         for (int j = 0; j < dimEtaU.getSize(); j++) {
             for (int i = 0; i < dimXiU.getSize(); i++) {
@@ -260,21 +256,18 @@ void ROMSInit::write(size_t time) {
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int j = 0; j < dimEtaRho.getSize(); j++) {
         for (int i = 0; i < dimXiRho.getSize(); i++) {
             buffer[idx++] = ZETA[j][i];
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int j = 0; j < dimEtaV.getSize(); j++) {
         for (int i = 0; i < dimXiV.getSize(); i++) {
             buffer[idx++] = VBAR[j][i];
         }
     }
 
-    #pragma omp parallel for collapse(2) default(none) shared(buffer, idx)
     for (int j = 0; j < dimEtaU.getSize(); j++) {
         for (int i = 0; i < dimXiU.getSize(); i++) {
             buffer[idx++] = UBAR[j][i];
