@@ -32,7 +32,7 @@ CopernicusCur::CopernicusCur(const std::string &url) : CopernicusBase(url) {
         }
     }
 
-    // Reshape UO into a 4D vector
+    // Reshape VO into a 4D vector
     VO.resize(time_size);
     for (size_t t = 0; t < time_size; ++t) {
         VO[t].resize(depth_size);
@@ -42,7 +42,7 @@ CopernicusCur::CopernicusCur(const std::string &url) : CopernicusBase(url) {
                 VO[t][d][i].resize(lon_size);
                 for (size_t j = 0; j < lon_size; ++j) {
                     size_t index = (t * depth_size * lat_size * lon_size) + (d * lat_size * lon_size) + (i * lon_size) + j;
-                    VO[t][d][i][j] = uo[index];
+                    VO[t][d][i][j] = vo[index];
                 }
             }
         }
