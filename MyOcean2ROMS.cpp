@@ -206,8 +206,8 @@ MyOcean2ROMS::MyOcean2ROMS(const std::string &gridPath, const std::string &dataP
     CopernicusSSH dataSSH(myOceanPathSSH);
     CopernicusCur dataCur(myOceanPathCur);
 
-    auto LONXY = dataCur.getLON();
-    auto LATXY = dataCur.getLAT();
+    auto LONXY = dataCur.getLON2();
+    auto LATXY = dataCur.getLAT2();
     auto myOceanZ = dataCur.getZ();
 
     // Set the number of forcing time steps

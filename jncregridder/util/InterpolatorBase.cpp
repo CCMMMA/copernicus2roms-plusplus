@@ -4,8 +4,8 @@
 
 #include "InterpolatorBase.h"
 
-InterpolatorBase::InterpolatorBase(std::vector<double> srcLAT,
-                                   std::vector<double> srcLON,
+InterpolatorBase::InterpolatorBase(std::vector<std::vector<double>> srcLAT,
+                                   std::vector<std::vector<double>> srcLON,
                                    std::vector<std::vector<double>> dstLAT,
                                    std::vector<std::vector<double>> dstLON,
                                    std::vector<std::vector<int>> dstMASK)
@@ -17,12 +17,12 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
     size_t dstEta = dstSNDim;
     size_t dstXi = dstWEDim;
     size_t srcEta = srcLAT.size();
-    size_t srcXi = srcLON.size();
+    size_t srcXi = srcLAT[0].size();
 
-    double srcLonMin = srcLON[0];
-    double srcLatMin = srcLAT[0];
-    double srcLonMax = srcLON[srcXi - 1];
-    double srcLatMax = srcLAT[srcEta - 1];
+    double srcLonMin = srcLON[0][0];
+    double srcLonMax = srcLON[srcEta - 1][srcXi - 1];
+    double srcLatMin = srcLAT[0][0];
+    double srcLatMax = srcLAT[srcEta - 1][srcXi - 1];
     double srcLatDelta = srcLatMax - srcLatMin;
     double srcLonDelta = srcLonMax - srcLonMin;
     double srcLatStep = srcEta == 0 ? 0 : srcLatDelta / srcEta;
@@ -43,34 +43,75 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
                 int iR = static_cast<int>(srcII);
                 int jR = static_cast<int>(srcJJ);
 
-                std::vector<std::tuple<size_t, size_t, double>> pointsBilinear;
+                std::vector<Point> pointsBilinear;
+
+                /*
+                for (int j = jR; j <= jR + 1; j++) {
+                    size_t jj = j >= values.size() ? values.size() - 1 : j;
+                    for (int i = iR; i <= iR + 1; i++) {
+                        size_t ii = i >= values[0].size() ? values[0].size() - 1 : i;
+                        if (std::fabs(values[jj][ii] - srcMissingValue) > 1e13) {
+                            pointsBilinear.emplace_back(Point(jj, ii, values[jj][ii]));
+                        }
+                    }
+                }
+                */
+
                 for (int j : {jR - 1, jR + 1}) {
                     for (int i : {iR - 1, iR + 1}) {
                         size_t jj = std::min(std::max(j, 0), static_cast<int>(srcEta) - 1);
                         size_t ii = std::min(std::max(i, 0), static_cast<int>(srcXi) - 1);
                         // TODO: fix this workaround
                         if (std::fabs(values[jj][ii] - srcMissingValue) > 1e13) {
-                            pointsBilinear.emplace_back(jj, ii, values[jj][ii]);
+                            pointsBilinear.emplace_back(Point(jj, ii, values[jj][ii]));
                         }
                     }
                 }
 
                 if (pointsBilinear.size() == 4) {
-                    double lon1 = srcLON[std::get<1>(pointsBilinear[0])];
-                    double lat1 = srcLAT[std::get<0>(pointsBilinear[0])];
-                    double lon2 = srcLON[std::get<1>(pointsBilinear[1])];
-                    double lat2 = srcLAT[std::get<0>(pointsBilinear[2])];
+                    double lon1 = srcLON[pointsBilinear[0].j][pointsBilinear[0].i];
+                    double lat1 = srcLAT[pointsBilinear[0].j][pointsBilinear[0].i];
+                    double lon2 = srcLON[pointsBilinear[1].j][pointsBilinear[1].i];
+                    double lat2 = srcLAT[pointsBilinear[2].j][pointsBilinear[2].i];
 
                     double dLon = lon2 - lon1;
                     double dLat = lat2 - lat1;
 
-                    double FXY1 = ((lon2 - dstLon) / dLon) * std::get<2>(pointsBilinear[0]) +
-                                  ((dstLon - lon1) / dLon) * std::get<2>(pointsBilinear[1]);
-                    double FXY2 = ((lon2 - dstLon) / dLon) * std::get<2>(pointsBilinear[2]) +
-                                  ((dstLon - lon1) / dLon) * std::get<2>(pointsBilinear[3]);
+                    double FXY1 = ((lon2 - dstLon) / dLon) * pointsBilinear[0].value + ((dstLon - lon1) / dLon) * pointsBilinear[1].value;
+                    double FXY2 = ((lon2 - dstLon) / dLon) * pointsBilinear[2].value + ((dstLon - lon1) / dLon) * pointsBilinear[3].value;
 
                     dst[dstJ][dstI] = ((lat2 - dstLat) / dLat) * FXY1 + ((dstLat - lat1) / dLat) * FXY2;
                 } else if (USE_IDW) {
+                    std::vector<Point> pointsIDW;
+                    int size = 0;
+
+                    do {
+                        size++;
+                        for (int j = jR - size; j <= jR + size; j++) {
+                            size_t jj = j >= values.size() ? values.size() - 1 : (j < 0 ? 0 : j);
+                            for (int i = iR - size; i <= iR + size; i++) {
+                                size_t ii = i >= values[0].size() ? values[0].size() - 1 : (i < 0 ? 0 : i);
+                                // TODO: fix this workaround
+                                if (std::fabs(values[jj][ii] - srcMissingValue) > 1e13) {
+                                    pointsIDW.emplace_back(Point(jj, ii, distance(dstLAT[dstJ][dstI], dstLON[dstJ][dstI], srcLAT[jj][ii], srcLON[jj][ii]), values[jj][ii]));
+                                }
+                            }
+                        }
+                    } while (pointsIDW.size() == 0 && size < 4);
+
+                    if (pointsIDW.size() > 0) {
+                        double weighted_values_sum = 0.0;
+                        double sum_of_weights = 0.0;
+                        double weight;
+                        for (const auto &point: pointsIDW) {
+                            weight = 1 / point.dist;
+                            sum_of_weights += weight;
+                            weighted_values_sum += weight * point.value;
+                        }
+                        dst[dstJ][dstI] = weighted_values_sum / sum_of_weights;
+                    }
+
+                    /*
                     std::vector<std::tuple<size_t, size_t, double, double>> pointsIDW;
                     size_t size = 0;
 
@@ -85,9 +126,8 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
                                 if (std::fabs(values[jj][ii] - srcMissingValue) > 1e13) {
                                     pointsIDW.emplace_back(jj,
                                                            ii,
-                                                           haversine(dstLat, dstLon,
-                                                                     srcLAT[jj], srcLON[ii]),
-                                                                     values[jj][ii]);
+                                                           distance(dstLat, dstLon,srcLAT[jj][ii],srcLON[jj][ii]),
+                                                           values[jj][ii]);
                                 }
                             }
                         }
@@ -103,6 +143,7 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
                         }
                         dst[dstJ][dstI] = weighted_values_sum / sum_of_weights;
                     }
+                     */
                 }
             }
         }
@@ -111,20 +152,25 @@ std::vector<std::vector<double>> InterpolatorBase::interp(std::vector<std::vecto
     return dst;
 }
 
-double InterpolatorBase::haversine(double lat1, double lon1, double lat2, double lon2) {
-    // convert decimal degrees to radians
-    lat1 = lat1 * M_PI / 180.0;
-    lon1 = lon1 * M_PI / 180.0;
-    lat2 = lat2 * M_PI / 180.0;
-    lon2 = lon2 * M_PI / 180.0;
+double InterpolatorBase::distance(double startLat, double startLong,
+        double endLat, double endLong) {
 
-    // haversine formula
-    double dlon = lon2 - lon1;
-    double dlat = lat2 - lat1;
-    double a = std::sin(dlat / 2.0) * std::sin(dlat / 2.0) +
-               std::cos(lat1) * std::cos(lat2) *
-               std::sin(dlon / 2.0) * std::sin(dlon / 2.0);
-    double c = 2 * std::asin(std::sqrt(a));
-    double km = 6367 * c;
-    return km;
+    double dLat  = toRadians((endLat - startLat));
+    double dLong = toRadians((endLong - startLong));
+
+    startLat = toRadians(startLat);
+    endLat   = toRadians(endLat);
+
+    double a = haversin(dLat) + cos(startLat) * cos(endLat) * haversin(dLong);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    return EARTH_RADIUS * c;
+}
+
+double InterpolatorBase::toRadians(double degrees) {
+    return degrees * M_PI / 180.0;
+}
+
+double InterpolatorBase::haversin(double val) {
+    return pow(sin(val / 2), 2);
 }

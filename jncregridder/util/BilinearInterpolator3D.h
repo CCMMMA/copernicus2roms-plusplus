@@ -16,8 +16,8 @@ struct Weight3DStruct {
 
 class BilinearInterpolator3D : public InterpolatorBase {
 public:
-    BilinearInterpolator3D(std::vector<double> srcLAT,
-                           std::vector<double> srcLON,
+    BilinearInterpolator3D(std::vector<std::vector<double>> srcLAT,
+                           std::vector<std::vector<double>> srcLON,
                            std::vector<std::vector<std::vector<double>>> srcZ,
                            std::vector<std::vector<double>> dstLAT,
                            std::vector<std::vector<double>> dstLON,

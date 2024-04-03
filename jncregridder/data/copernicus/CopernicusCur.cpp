@@ -6,9 +6,9 @@
 
 CopernicusCur::CopernicusCur(const std::string &url) : CopernicusBase(url) {
     // Load UO variable
-    std::vector<double> vo = loadVariable("vo");
+    std::vector<double> vo = loadVariable<double>("vo");
     // Load VO variable
-    std::vector<double> uo = loadVariable("uo");
+    std::vector<double> uo = loadVariable<double>("uo");
 
     // Get time, depth, lat, and lon sizes
     size_t time_size = getTime();

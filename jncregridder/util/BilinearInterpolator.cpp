@@ -4,8 +4,8 @@
 
 #include "BilinearInterpolator.h"
 
-BilinearInterpolator::BilinearInterpolator(std::vector<double> srcLAT,
-                                           std::vector<double> srcLON,
+BilinearInterpolator::BilinearInterpolator(std::vector<std::vector<double>> srcLAT,
+                                           std::vector<std::vector<double>> srcLON,
                                            std::vector<std::vector<double>> dstLAT,
                                            std::vector<std::vector<double>> dstLON,
                                            std::vector<std::vector<int>> dstMASK)

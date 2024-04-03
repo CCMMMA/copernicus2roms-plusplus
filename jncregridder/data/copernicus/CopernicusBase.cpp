@@ -4,6 +4,55 @@
 
 #include "CopernicusBase.h"
 
+template<>
+std::vector<double> CopernicusBase::loadVariable<double>(const std::string& variable_name) {
+    std::vector<double> variable_data;
+
+    auto variable = ncFile->getVar(variable_name);
+    // Get the dimensions of the variable
+    auto dims = variable.getDims();
+    size_t totalSize = 1;
+    for (const auto& dim : dims) {
+        totalSize *= dim.getSize();
+    }
+
+    // Resize the vector to hold the variable data
+    variable_data.resize(totalSize);
+
+    // Read the variable data from the file
+    variable.getVar(variable_data.data());
+
+    return variable_data;
+}
+
+template<>
+std::vector<std::vector<double>> CopernicusBase::loadVariable<std::vector<double>>(const std::string& variable_name) {
+    if (variable_name == "LAT2") {
+        std::vector<std::vector<double>> lat;
+        lat.resize(LAT.size());
+        for (int j = 0; j < LAT.size(); j++) {
+            lat[j].resize(LON.size());
+            for (int i = 0; i < LON.size(); i++) {
+                lat[j][i] = LAT[j];
+            }
+        }
+
+        return lat;
+    } else if (variable_name == "LON2") {
+        std::vector<std::vector<double>> lon;
+        lon.resize(LAT.size());
+        for (int j = 0; j < LAT.size(); j++) {
+            lon[j].resize(LON.size());
+            for (int i = 0; i < LON.size(); i++) {
+                lon[j][i] = LON[i];
+            }
+        }
+        return lon;
+    }
+
+    return {};
+}
+
 CopernicusBase::CopernicusBase(const std::string& url) {
     try {
         ncFile = new netCDF::NcFile(url, netCDF::NcFile::read);
@@ -16,11 +65,13 @@ CopernicusBase::CopernicusBase(const std::string& url) {
         b3D = !dimDepth.isNull();
 
         // Set dimension sizes
-        TIME = loadVariable("time");
-        LAT = loadVariable("latitude");
-        LON = loadVariable("longitude");
-        DEPTH = b3D ? loadVariable("depth") : std::vector<double>();
+        TIME = loadVariable<double>("time");
+        LAT = loadVariable<double>("latitude");
+        LON = loadVariable<double>("longitude");
+        DEPTH = b3D ? loadVariable<double>("depth") : std::vector<double>();
         Z = b3D ? calculateZ() : std::vector<std::vector<std::vector<double>>>();
+        LAT2 = loadVariable<std::vector<double>>("LAT2");
+        LON2 = loadVariable<std::vector<double>>("LON2");
     } catch (const netCDF::exceptions::NcException& e) {
         std::cerr << "NetCDF error: " << e.what() << std::endl;
     }
@@ -52,8 +103,16 @@ std::vector<double> CopernicusBase::getLAT() const {
     return LAT;
 }
 
+std::vector<std::vector<double>> CopernicusBase::getLAT2() const {
+    return LAT2;
+}
+
 std::vector<double> CopernicusBase::getLON() const {
     return LON;
+}
+
+std::vector<std::vector<double>> CopernicusBase::getLON2() const {
+    return LON2;
 }
 
 std::vector<double> CopernicusBase::getTIME() const {
@@ -86,24 +145,4 @@ std::vector<std::vector<std::vector<double>>> CopernicusBase::calculateZ() const
     }
 
     return z;
-}
-
-std::vector<double> CopernicusBase::loadVariable(const std::string& variable_name) {
-    std::vector<double> variable_data;
-
-    auto variable = ncFile->getVar(variable_name);
-    // Get the dimensions of the variable
-    auto dims = variable.getDims();
-    size_t totalSize = 1;
-    for (const auto& dim : dims) {
-        totalSize *= dim.getSize();
-    }
-
-    // Resize the vector to hold the variable data
-    variable_data.resize(totalSize);
-
-    // Read the variable data from the file
-    variable.getVar(variable_data.data());
-
-    return variable_data;
 }

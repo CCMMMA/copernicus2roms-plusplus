@@ -9,8 +9,8 @@
 
 class BilinearInterpolator : public InterpolatorBase {
 public:
-    BilinearInterpolator(std::vector<double> srcLAT,
-                         std::vector<double> srcLON,
+    BilinearInterpolator(std::vector<std::vector<double>> srcLAT,
+                         std::vector<std::vector<double>> srcLON,
                          std::vector<std::vector<double>> dstLAT,
                          std::vector<std::vector<double>> dstLON,
                          std::vector<std::vector<int>> dstMASK);

@@ -6,9 +6,9 @@
 
 CopernicusTem::CopernicusTem(const std::string& url) : CopernicusBase(url) {
     // Load THETAO variable
-    std::vector<double> thetao = loadVariable("thetao");
+    std::vector<double> thetao = loadVariable<double>("thetao");
     // Load BOTTOMT variable
-    std::vector<double> bottomT = loadVariable("bottomT");
+    std::vector<double> bottomT = loadVariable<double>("bottomT");
 
     // Get time, depth, lat, and lon sizes
     size_t time_size = getTime();

@@ -4,8 +4,8 @@
 
 #include "BilinearInterpolator3D.h"
 
-BilinearInterpolator3D::BilinearInterpolator3D(std::vector<double> srcLAT,
-                                               std::vector<double> srcLON,
+BilinearInterpolator3D::BilinearInterpolator3D(std::vector<std::vector<double>> srcLAT,
+                                               std::vector<std::vector<double>> srcLON,
                                                std::vector<std::vector<std::vector<double>>> srcZ,
                                                std::vector<std::vector<double>> dstLAT,
                                                std::vector<std::vector<double>> dstLON,

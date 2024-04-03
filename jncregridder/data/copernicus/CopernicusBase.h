@@ -21,18 +21,23 @@ public:
     int getDepth() const;
 
     std::vector<double> getLAT() const;
+    std::vector<std::vector<double>> getLAT2() const;
     std::vector<double> getLON() const;
+    std::vector<std::vector<double>> getLON2() const;
     std::vector<double> getTIME() const;
     std::vector<double> getDEPTH() const;
     std::vector<std::vector<std::vector<double>>> getZ() const;
 
 protected:
-    std::vector<double> loadVariable(const std::string& variable_name);
+    template<typename T>
+    std::vector<T> loadVariable(const std::string& variable_name);
 
 private:
     netCDF::NcFile* ncFile;
     std::vector<double> LAT;
+    std::vector<std::vector<double>> LAT2;
     std::vector<double> LON;
+    std::vector<std::vector<double>> LON2;
     std::vector<double> TIME;
     std::vector<double> DEPTH;
     std::vector<std::vector<std::vector<double>>> Z;

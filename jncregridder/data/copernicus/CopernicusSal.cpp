@@ -6,7 +6,7 @@
 
 CopernicusSal::CopernicusSal(const std::string& url) : CopernicusBase(url) {
     // Load SO variable
-    std::vector<double> so = loadVariable("so");
+    std::vector<double> so = loadVariable<double>("so");
 
     // Get time, depth, lat, and lon sizes
     size_t time_size = getTime();

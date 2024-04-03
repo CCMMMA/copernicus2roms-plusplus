@@ -12,10 +12,22 @@
 #include <tuple>
 #include <algorithm>
 
+class Point {
+public:
+    size_t j;
+    size_t i;
+    double dist;
+    double value;
+    double w;
+
+    Point(size_t j_, size_t i_, double dist_, double value_) : j(j_), i(i_), dist(dist_), value(value_) {}
+    Point(size_t j_, size_t i_, double value_) : j(j_), i(i_), dist(-1), value(value_) {}
+};
+
 class InterpolatorBase {
 public:
-    InterpolatorBase(std::vector<double> srcLAT,
-                     std::vector<double> srcLON,
+    InterpolatorBase(std::vector<std::vector<double>> srcLAT,
+                     std::vector<std::vector<double>> srcLON,
                      std::vector<std::vector<double>> dstLAT,
                      std::vector<std::vector<double>> dstLON,
                      std::vector<std::vector<int>> dstMASK);
@@ -23,13 +35,16 @@ public:
                                             double dstMissingValue);
 
 private:
-    std::vector<double> srcLAT;
-    std::vector<double> srcLON;
+    std::vector<std::vector<double>> srcLAT;
+    std::vector<std::vector<double>> srcLON;
     std::vector<std::vector<double>> dstLAT;
     std::vector<std::vector<double>> dstLON;
     bool USE_IDW = true;
+    const int EARTH_RADIUS = 6371;
 
-    double haversine(double, double, double, double);
+    double distance(double, double, double, double);
+    double toRadians(double);
+    double haversin(double);
 
 protected:
     int dstSNDim;

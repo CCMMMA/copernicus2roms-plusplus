@@ -6,7 +6,7 @@
 
 CopernicusSSH::CopernicusSSH(const std::string& url) : CopernicusBase(url) {
     // Load ZOS variable
-    std::vector<double> zos = loadVariable("zos");
+    std::vector<double> zos = loadVariable<double>("zos");
 
     // Get time, lat, and lon sizes
     size_t time_size = getTime();
