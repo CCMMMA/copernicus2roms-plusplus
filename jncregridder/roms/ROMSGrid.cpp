@@ -19,12 +19,70 @@ ROMSGrid::ROMSGrid(const std::string& url) {
         xiV = ncDataset.getDim("xi_v").getSize();
 
         // Load other variables
-        s_rho = loadVariable("s_rho");
-        cs_r = loadVariable("Cs_r");
-        s_w = loadVariable("s_w");
-        cs_w = loadVariable("Cs_w");
-        theta_s = loadVariable("theta_s");
-        theta_b = loadVariable("theta_b");
+        HC = loadVariable("hc");
+
+        if (HC.empty()) {
+            HC.resize(1);
+            HC[0] = 5.0;
+
+            TCLINE.resize(1);
+            TCLINE[0] = 25.0;
+
+            theta_s.resize(1);
+            theta_s[0] = 3.0;
+
+            theta_b.resize(1);
+            theta_b[0] = 0.0;
+
+            int N = 30;
+            double ds = 1.0 / N;
+            std::vector<double> lev(N);
+
+            for (int i = 0; i < lev.size(); i++) {
+                lev[i] = (1 + i) - 0.5;
+            }
+
+            s_rho.resize(lev.size());
+            for (int i = 0; i < s_rho.size(); i++) {
+                s_rho[i] = (lev[i] - N) * ds;
+            }
+
+            cs_r.resize(lev.size());
+            s_w.resize(lev.size() + 1);
+            s_w[0] = -1;
+
+            cs_w.resize(lev.size() + 1);
+            cs_w[0] = -1;
+
+            double cff1 = (1 / sinh(theta_s[0]));
+            double cff2 = (0.5 / tanh(0.5 * theta_s[0]));
+
+            if (theta_s[0] > 0) {
+                std::vector<double> pTheta(s_rho.size());
+                std::vector<double> rTheta(s_rho.size());
+
+                for (int i = 0; i < pTheta.size(); i++) {
+                    pTheta[i] = sinh(theta_s[0] * s_rho[i]) * cff1;
+                    rTheta[i] = tanh(theta_s[0] * (s_rho[i] + 0.5)) / (2.0 * tanh(0.5 * theta_s[0]) - 0.5);
+                    cs_r[i] = (1.0 - theta_b[0]) * pTheta[i] + theta_b[0] * rTheta[i];
+                    cs_w[i + 1] = (1.0 - theta_b[0]) * cff1 * sinh(theta_s[0] * s_w[i + 1]) + theta_b[0] * (cff2 * tanh(theta_s[0] * (s_w[i + 1] + 0.5)) - 0.5);
+                }
+            } else {
+                for (int i = 0; i < s_rho.size(); i++) {
+                    cs_r[i] = s_rho[i];
+                    cs_w[i + 1] = s_w[i + 1];
+                }
+            }
+        } else {
+            theta_s = loadVariable("theta_s");
+            theta_b = loadVariable("theta_b");
+            s_rho = loadVariable("s_rho");
+            cs_r = loadVariable("Cs_r");
+            s_w = loadVariable("s_w");
+            cs_w = loadVariable("Cs_w");
+            TCLINE = loadVariable("Tcline");
+        }
+
         ANGLE = loadVariable("angle");
         LATRHO = loadVariable("lat_rho");
         LONRHO = loadVariable("lon_rho");
@@ -35,12 +93,10 @@ ROMSGrid::ROMSGrid(const std::string& url) {
         LATV = loadVariable("lat_v");
         LONV = loadVariable("lon_v");
         H = loadVariable("h");
-        HC = loadVariable("hc");
         MASKRHO = loadVariable("mask_rho");
         MASKU = loadVariable("mask_u");
         MASKV = loadVariable("mask_v");
         Z = loadVariable("z");
-        TCLINE = loadVariable("Tcline");
     } catch (const netCDF::exceptions::NcException& e) {
         std::cerr << "NetCDF error: " << e.what() << std::endl;
     }
@@ -80,7 +136,7 @@ std::vector<double> ROMSGrid::loadVariable(const std::string& variable_name) {
             variable.getVar(variable_data.data());
         }
     } catch (const netCDF::exceptions::NcException& e) {
-        std::cerr << "NetCDF error: " << e.what() << std::endl;
+        std::cerr << "NetCDF error: " << e.what() << ": " << variable_name << std::endl;
     } catch (const std::exception& e) {
         std::cerr << "Error loading variable " << variable_name << ": " << e.what() << std::endl;
     }
