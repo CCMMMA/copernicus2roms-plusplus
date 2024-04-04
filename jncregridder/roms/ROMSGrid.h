@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <netcdf>
+#include <cmath>
 
 
 class ROMSGrid {
